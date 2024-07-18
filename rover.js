@@ -14,6 +14,8 @@ class Rover {
          results: []
       }
 
+      const commands = message.commands;
+
       // let roverStatus={
       //    mode: this.mode,
       //    generatorWatts: this.generatorWatts,
@@ -23,21 +25,21 @@ class Rover {
       // iterate each command in message
    for(let i=0; i<message.commands.length; i++) {
     // respond to commandType STATUS_CHECK
-      if(message.commands[i].commandType === "STATUS_CHECK"){
+      if(commands[i].commandType === "STATUS_CHECK"){
         // push results object with rover status
         response.results.push({completed:true, roverStatus:{mode: this.mode, generatorWatts: this.generatorWatts, position: this.position}})
       }
       // respond to commandType MODE_CHANGE
-      else if (message.commands[i].commandType === "MODE_CHANGE") {
-        this.mode = message.commands[i].value; // updating rover's mode to a new value specified in command
+      else if (commands[i].commandType === "MODE_CHANGE") {
+        this.mode = commands[i].value; // updating rover's mode to a new value specified in command
         response.results.push({completed:true})
       }
       // respond to commandType MOVE
-      else if (message.commands[i].commandType === "MOVE"){
+      else if (commands[i].commandType === "MOVE"){
         if(this.mode === "LOW_POWER") {
           response.results.push({completed:false});
         } else {
-         this.position = message.commands[i].value;
+         this.position = commands[i].value;
          response.results.push({completed:true})
         }
       }
@@ -45,13 +47,6 @@ class Rover {
     return response; 
    }   
 }
-
-// let commands = [new Command('MODE_CHANGE', 'LOW_POWER'), new Command('STATUS_CHECK')];
-// let message = new Message('Test message with two commands', commands);
-// let rover = new Rover(98382);    // Passes 98382 as the rover's position.
-// let response = rover.receiveMessage(message);
-
-// console.log(response);
 
 
 module.exports = Rover;
